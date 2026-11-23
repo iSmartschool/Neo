@@ -1,78 +1,119 @@
 <!DOCTYPE html>
-<html lang="en"><head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0f172a"><link rel="manifest" href="manifest.json"><link rel="icon" type="image/png" href="logo.png"><link rel="apple-touch-icon" href="apple-touch-icon.png">
-<title>DCLM Registration System</title><link rel="stylesheet" href="style.css">
-</head><body>
-<div id="auth"><div class="shell">
-<section class="hero"><div class="clogo" data-logo="✝"></div><h1 data-c="org">DCLM</h1><p class="ev" data-c="event"></p><p class="th" data-c="theme"></p><span class="dt" data-c="dates"></span>
-<ul class="perks"><li>Fast attendee registration</li><li>Works offline and syncs automatically</li><li>Live attendance, altar call and baptism reports</li></ul></section>
-<form class="login" id="loginForm" autocomplete="off"><h2>Welcome back</h2><p class="lead">Sign in to your account to continue</p>
-<p class="signas">Sign in as</p><div class="seg"><input type="radio" name="role" id="rReg" value="register" checked><label for="rReg">Reg. Officer</label><input type="radio" name="role" id="rAdm" value="admin"><label for="rAdm">Admin</label></div>
-<p class="signas">Password</p><div class="field"><span class="ico">🔒</span><input type="password" id="pw" placeholder="Enter your password" aria-label="Password" autocomplete="off"><button type="button" id="eye" aria-label="Show password">👁</button></div>
-<div class="field" id="srvBox" hidden><span class="ico">🔗</span><input id="srvUrl" placeholder="Server URL (https://script.google.com/…/exec)" aria-label="Server URL" autocomplete="off"></div>
-<div id="authMsg"></div><button class="btn" id="loginBtn" type="submit"><span>Sign in</span></button><small class="foot">🔒 Authorized personnel only</small></form></div></div>
-
-<div id="app" hidden>
-<div id="brand"><div class="blogo" data-logo="⛪"></div><h2 data-c="org">DCLM</h2><p><span data-c="event"></span><br><span data-c="dates"></span></p></div>
-<nav id="nav"><a class="tab on" data-tab="dashboard"><i>📊</i>Dashboard</a><a class="tab" data-tab="register"><i>📝</i>Register</a>
-<a class="tab adm" data-tab="districts"><i>🗺️</i>Districts</a><a class="tab adm" data-tab="analytics"><i>📈</i>Analytics</a><a class="tab adm" data-tab="headcount"><i>👥</i>Headcount</a><a class="tab adm" data-tab="settings"><i>⚙️</i>Programs</a></nav>
-<footer id="roleLbl"></footer>
-<main><header><span class="hlogo" data-logo="⛪"></span><div><b data-c="org">DCLM</b><small data-c="theme"></small></div>
-<select id="progSel" aria-label="Retreat program"></select><span id="sync"></span><button class="btn red" id="logout">Logout</button></header>
-<div id="content"><div id="pbanner" class="alert warning" hidden></div>
-<section id="dashboard" class="pane on"><h3>Dashboard Overview</h3><div id="dashMsg"></div>
-<div class="stats"><div><b id="tTotal">0</b>Total</div><div><b id="tToday">0</b>Today</div><div><b id="tNew">0</b>New Comers</div><div><b id="tMem">0</b>Members</div></div>
-<div class="charts"><div class="card"><h4>Registrations by Camp</h4><div id="chCamp"></div></div><div class="card"><h4>Gender</h4><div id="chGender"></div></div></div>
-<h3>Recent Registrations</h3><div id="recent"></div></section>
-
-<section id="register" class="pane"><h3>New Registration</h3><div id="regMsg"></div>
-<form id="regForm"><label>Date *<input type="date" id="date" required></label>
-<label>Full Name *<input id="fullName" required minlength="2" maxlength="100"></label>
-<div class="row"><label>Gender *<select id="gender" required><option value="">Select</option><option>Male</option><option>Female</option></select></label>
-<label>Age Group *<select id="ageGroup" required><option value="">Select</option><option>3–5</option><option>6–9</option><option>10–12</option><option>13–19</option><option>20–29</option><option>30–39</option><option>40–49</option><option>50–59</option><option>60+</option></select></label></div>
-<div class="row"><label>Camp *<select id="camp" required><option value="">Select</option><option>Adult</option><option>Youth</option><option>Campus</option><option>Children</option></select></label>
-<label>Status *<select id="status" required><option value="">Select</option><option>Member</option><option>New Comer</option></select></label></div>
-<div class="row"><label>District *<select id="district" required></select></label><label>Location *<select id="location" required disabled></select></label></div>
-<label id="invBox" hidden>Invited By *<input id="invitedBy" maxlength="100"></label>
-<label>Phone <small>(optional)</small><input type="tel" id="phone" maxlength="20"></label>
-<button class="btn" id="regBtn">Register Attendee</button></form></section>
-
-<section id="districts" class="pane"><h3>Districts &amp; Locations</h3><div id="distMsg"></div>
-<form id="locForm" class="row3"><label>District *<input id="newDistrict" required></label><label>Location *<input id="newLocation" required></label><button class="btn">Add</button></form>
-<div id="distList"></div></section>
-
-<section id="analytics" class="pane"><h3>Charts</h3><div id="anMsg"></div><div class="charts"><div class="card"><h4>Daily registrations by camp</h4><div id="chDaily"></div></div><div class="card"><h4>Male vs Female by camp</h4><div id="chCampGender"></div></div><div class="card wide"><h4>Top 10 districts</h4><div id="chDist"></div></div><div class="card wide"><h4>Registrations by age group</h4><div id="chAge"></div></div></div>
-<h3>Outreach Funnel</h3><div class="charts"><div class="card"><h4>Registered → Altar calls → Baptized</h4><div id="insFunnel"></div></div><div class="card"><h4>Altar call rate per message</h4><div class="tw" id="insMsgs"></div></div></div>
-<h3>Compare with Previous Program</h3><div id="insCmp"></div>
-<h3>Camp Statistics</h3><div class="tw" id="anCamp"></div>
-<h3>Daily Registration Breakdown</h3><div class="tw" id="anDaily"></div><h3>District Distribution</h3><div class="tw" id="anDist"></div>
-<h3>Export</h3><div id="exMsg"></div><div class="exp"><button class="btn" data-exp="registrations">⬇ Registrations (CSV)</button><button class="btn" data-exp="headcount">⬇ Headcount (CSV)</button><button class="btn" data-exp="baptisms">⬇ Baptisms (CSV)</button></div></section>
-
-<section id="headcount" class="pane"><h3>Headcount</h3><div id="hcMsg"></div>
-<form id="msgForm" class="row3"><label>Message Title *<input id="newMessage" required></label><label>Speaker<input id="speaker"></label><button class="btn">Add Message</button></form>
-<form id="hcForm"><div class="row3"><label>Date *<input type="date" id="hDate" required></label>
-<label>Camp *<select id="hCamp" required><option value="">Select</option><option>Adult</option><option>Youth</option><option>Campus</option><option>Children</option></select></label>
-<label>Message *<select id="hMsg" required></select></label></div>
-<div class="row3"><label>Male<input type="number" min="0" id="hM" value="0"></label><label>Female<input type="number" min="0" id="hF" value="0"></label><label>Total<input id="hT" value="0" readonly></label></div>
-<div class="row3"><label>Altar Call Male<input type="number" min="0" id="aM" value="0"></label><label>Altar Call Female<input type="number" min="0" id="aF" value="0"></label><label>Altar Total<input id="aT" value="0" readonly></label></div>
-<label>Notes<textarea id="hNotes" rows="2"></textarea></label><button class="btn">Record Headcount</button></form>
-<h3>Baptism of Converts</h3><div id="bpMsg"></div>
-<form id="bpForm"><div class="row3"><label>Date *<input type="date" id="bDate" required></label><label>Male baptized<input type="number" min="0" id="bM" value="0"></label><label>Female baptized<input type="number" min="0" id="bF" value="0"></label></div>
-<div class="row"><label>Total baptized<input id="bT" value="0" readonly></label><label>Notes<input id="bNotes" maxlength="200"></label></div><button class="btn">Record Baptism</button></form>
-<div class="stats" id="bpStats"></div><div class="tw" id="bpTable"></div>
-<h3>History</h3><div class="filters"><input type="date" id="fDate"><select id="fCamp"><option value="">All Camps</option><option>Adult</option><option>Youth</option><option>Campus</option><option>Children</option></select><select id="fMsg"></select><input id="fQ" placeholder="Search…"><button class="btn" id="fClear">Clear</button></div>
-<div class="tw" id="hcTable"></div><div class="pager"><button class="btn" id="prev">Prev</button><span id="pg"></span><button class="btn" id="next">Next</button></div>
-<div class="stats" id="hcStats"></div><h3>By Camp</h3><div class="tw" id="hcCamps"></div><h3>By Message</h3><div class="tw" id="hcMsgs"></div></section>
-<section id="settings" class="pane"><h3>Retreat Programs</h3><div id="setMsg"></div><div id="progList"></div>
-<h3>Add / Edit Program</h3><form id="progForm"><input type="hidden" id="pId"><label>Program name *<input id="pName" required maxlength="100" placeholder="e.g. Global December Retreat 2026"></label><label>Theme<input id="pTheme" maxlength="100"></label>
-<div class="row"><label>Start date *<input type="date" id="pStart" required></label><label>End date *<input type="date" id="pEnd" required></label></div>
-<button class="btn">Save Program</button><button type="button" class="link" id="pClear">Clear form</button></form>
-<h3>Organisation</h3><form id="orgForm"><label>Organisation / Region name<input id="cOrg" maxlength="100"></label><button class="btn">Save</button></form>
-<h3>Church Logo</h3><div class="logoprev" data-logo="No logo yet"></div><label>Upload logo (PNG, JPG or WebP)<input type="file" id="logoFile" accept="image/*"></label><button type="button" class="btn red" id="logoDel">Remove logo</button>
-<h3>Change Password</h3><form id="pwForm" autocomplete="off"><label>Password to change<select id="pwRole"><option value="register">Registration Officer</option><option value="admin">Administrator</option></select></label>
-<label>Your current admin password *<input type="password" id="pwCur" required autocomplete="current-password"></label>
-<label>New password * <small>(min 6 characters)</small><input type="password" id="pwNew" required minlength="6" autocomplete="new-password"></label>
-<label>Confirm new password *<input type="password" id="pwNew2" required minlength="6" autocomplete="new-password"></label><button class="btn">Change Password</button></form></section>
-</div></main></div>
-<script src="config.js"></script><script src="app.js"></script></body></html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; manifest-src 'self'; worker-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="description" content="iSmartSchool – school management for GES schools: students, fees, canteen, attendance, results, report cards and payroll. Works offline.">
+  <meta name="theme-color" content="#152230">
+  <meta name="color-scheme" content="dark light">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="iSmartSchool">
+  <title>iSmartSchool – GES SMS</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="assets/icons/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+  <script src="assets/js/theme-init.js"></script>
+  <link rel="stylesheet" href="assets/css/app.css">
+  <link rel="stylesheet" href="assets/css/offline.css">
+</head>
+<body>
+<noscript><div class="noscript">iSmartSchool needs JavaScript. Please enable it in your browser settings.</div></noscript>
+<div id="loginOverlay">
+  <button type="button" class="login-theme theme-btn" aria-label="Switch light or dark mode" title="Switch light / dark mode">🌙</button>
+  <main class="auth">
+    <section class="auth-brand" aria-label="About this system">
+      <div class="auth-brand-inner">
+        <div class="auth-crest" id="loginLogo" aria-hidden="true">🏫</div>
+        <p class="auth-product">iSmartSchool</p>
+        <h1 id="loginSubtitle" class="auth-school">School Management System</h1>
+        <p class="auth-tag">Everything your school runs on, in one secure place.</p>
+        <ul class="auth-points">
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h18v10H3zM3 10h18M7 15h3"/></svg><span><b>Fees &amp; receipts</b> collected, tracked and reconciled</span></li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V5m0 14h16M8 16v-5m4 5V8m4 8v-3"/></svg><span><b>Results &amp; report cards</b> ready for every class</span></li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12a10 10 0 0 1 14 0M8 15a6 6 0 0 1 8 0M12 19h.01"/></svg><span><b>Works offline</b> and catches up when you reconnect</span></li>
+        </ul>
+      </div>
+      <p class="auth-brand-foot">© iSmartSchool 2026. All rights reserved.</p>
+    </section>
+    <section class="auth-panel">
+      <div class="auth-card">
+        <div id="setupForm"></div>
+        <div id="loginForm">
+          <header class="auth-head">
+            <h2>Welcome back</h2>
+            <p>Sign in with your username to continue.</p>
+          </header>
+          <form id="loginFormEl" novalidate onsubmit="return false">
+            <div class="field">
+              <label for="loginUsername">Username</label>
+              <div class="input-wrap">
+                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+                <input id="loginUsername" type="text" inputmode="text" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" maxlength="80" placeholder="e.g. kofi.mensah" aria-describedby="loginError">
+              </div>
+            </div>
+            <div class="field">
+              <label for="loginPassword">Password</label>
+              <div class="input-wrap">
+                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+                <input id="loginPassword" type="password" autocomplete="current-password" placeholder="Enter your password" aria-describedby="loginCaps loginError">
+                <button type="button" class="reveal" id="loginReveal" aria-label="Show password" aria-pressed="false">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+                </button>
+              </div>
+              <p class="caps hidden" id="loginCaps" role="status">Caps Lock is on</p>
+            </div>
+            <label class="remember-row switch" for="loginRemember">
+              <input type="checkbox" id="loginRemember">
+              <span class="track" aria-hidden="true"></span>
+              <span class="txt">Keep me signed in on this device<small>Needed to open the app offline. Leave off on a shared computer.</small></span>
+            </label>
+            <button class="auth-btn" id="loginBtn" type="submit"><span class="lbl">Sign in</span><span class="spin" aria-hidden="true"></span></button>
+          </form>
+          <p id="loginError" class="auth-error" role="alert"></p>
+          <p id="loginNet" class="login-net hidden" role="status"></p>
+          <button type="button" class="btn btn-secondary install-btn hidden" id="installBtnLogin">⬇️ Install app</button>
+          <p class="auth-help">Forgot your password or username? Ask your school administrator.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+<div class="app-layout" id="appLayout">
+  <div class="mobile-topbar">
+    <button id="menuBtn" aria-label="Open menu" aria-controls="sidebar" aria-expanded="false">☰</button>
+    <span id="mobileTitle">Dashboard</span>
+    <button type="button" class="sync-pill" data-sync-pill aria-label="Connection and sync status"><span class="dot"></span><span class="txt">Online</span></button>
+    <button type="button" class="theme-btn" aria-label="Switch light or dark mode" title="Switch light / dark mode">🌙</button>
+    <span class="mobile-crest" id="mobileCrest">🏫</span>
+  </div>
+  <div id="navBackdrop"></div>
+  <div class="app-sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-crest" id="sidebarCrest">🏫</div>
+      <div class="sidebar-title"><span id="sidebarSchoolName">iSmartSchool</span><br><small id="sidebarUser" style="color:var(--text-muted)"></small></div>
+    </div>
+    <div id="navMenu"></div>
+    <div class="sidebar-footer"><button type="button" class="theme-btn theme-toggle" id="themeSideBtn" style="margin-bottom:8px;">🌙 Dark mode</button><button type="button" class="install-btn hidden" id="installBtnSide" style="margin-bottom:8px;">⬇️ Install app</button><button type="button" id="syncCenterBtn" style="margin-bottom:8px;">🔄 Sync &amp; offline data</button><button id="changePwBtn">🔑 Change Password</button><button id="logoutBtnSide" class="side-logout">🚪 Logout</button></div>
+  </div>
+  <div class="main-content">
+    <div class="page-header"><h2 id="pageTitle">Dashboard</h2><div class="page-header-actions"><button type="button" class="sync-pill" data-sync-pill aria-label="Connection and sync status"><span class="dot"></span><span class="txt">Online</span></button><button class="logout-btn-top" id="logoutBtn">🚪 Logout</button></div></div>
+    <div id="connBanner" class="conn-banner hidden" role="status" aria-live="polite"></div>
+    <div id="pageBody"></div>
+  </div>
+</div>
+<nav class="bottom-nav" id="bottomNav" aria-label="Quick navigation"></nav>
+<div id="printOverlay" class="print-overlay"><div id="printContent"></div></div>
+<div id="modalContainer"></div>
+<div id="toastHost" class="toast-host" aria-live="polite"></div>
+<script src="config.js"></script>
+<script src="assets/js/api.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/sync-ui.js"></script>
+<script src="assets/js/pwa.js"></script>
+</body>
+</html>
